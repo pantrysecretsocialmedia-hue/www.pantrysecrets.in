@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantry Secrets | Gourmet Artisanal Showcase & WhatsApp Ordering</title>
+  <meta name="description" content="Handcrafted organic spices, cold-pressed infused oils, raw wildflower honey, and specialty seasonings. Order directly via WhatsApp!">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <span class="badge">WhatsApp Direct</span>
+    <span>Order directly on WhatsApp for fast local delivery & custom gourmet inquiries!</span>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Brand Logo -->
+      <a class="brand-logo" data-page="home">
+        <i class="fa-solid fa-jar-wheat"></i>
+        <span>Pantry<span class="accent">Secrets</span></span>
+      </a>
+
+      <!-- Header Navigation Menu Links -->
+      <ul class="nav-menu">
+        <li><a class="nav-link active" data-page="home"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a class="nav-link" data-page="shop"><i class="fa-solid fa-store"></i> Showcase</a></li>
+        <li><a class="nav-link" data-page="about"><i class="fa-solid fa-leaf"></i> About Us</a></li>
+        <li><a class="nav-link" data-page="contact"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+      </ul>
+
+      <!-- Live Search Box -->
+      <div class="search-box">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search spices, oils, honey..." aria-label="Search items">
+        <button class="search-btn" aria-label="Search button"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+
+      <!-- Action Button (WhatsApp CTA) -->
+      <div class="nav-actions">
+        <a href="https://wa.me/919876543210?text=Hello%20Pantry%20Secrets!%20I%20would%20like%20to%20inquire%20about%20your%20gourmet%20products." target="_blank" class="header-whatsapp-btn" aria-label="Chat on WhatsApp">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Category Subnav Bar -->
+  <div class="subnav">
+    <div class="subnav-container">
+      <a class="subnav-link active" data-category="all">All Showcase</a>
+      <a class="subnav-link" data-category="spices">Spices & Rubs</a>
+      <a class="subnav-link" data-category="oils">Artisanal Oils & Vinegars</a>
+      <a class="subnav-link" data-category="honey">Raw Honey & Preserves</a>
+      <a class="subnav-link" data-category="sauces">Specialty Sauces & Condiments</a>
+      <a class="subnav-link" data-category="salts">Gourmet Salts</a>
+    </div>
+  </div>
+
+  <!-- ==================== HOME PAGE VIEW ==================== -->
+  <section class="page-view active" id="page-home">
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1>Handcrafted Gourmet <span class="gold">Pantry Flavors</span></h1>
+          <p>Elevate every dish with small-batch organic spices, cold-pressed infused oils, raw wildflower honey, and rare artisan seasonings. Order directly via WhatsApp!</p>
+          <div class="hero-buttons">
+            <button class="btn-primary" data-page="shop"><i class="fa-solid fa-store"></i> Browse Product Showcase</button>
+            <a href="https://wa.me/919876543210?text=Hello%20Pantry%20Secrets!%20I%20am%20interested%20in%20ordering%20gourmet%20spices." target="_blank" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Order via WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Highlights Bar -->
+    <div class="features-bar">
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-brands fa-whatsapp"></i></div>
+          <div class="feature-info">
+            <h4>Instant WhatsApp Orders</h4>
+            <p>Direct chat ordering & support</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-seedling"></i></div>
+          <div class="feature-info">
+            <h4>100% Pure & Organic</h4>
+            <p>Non-GMO & ethically sourced</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-award"></i></div>
+          <div class="feature-info">
+            <h4>Small-Batch Quality</h4>
+            <p>Hand-packed for peak aroma</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="feature-info">
+            <h4>Fast Delivery</h4>
+            <p>Direct door-step dispatch</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Products Showcase -->
+    <div class="section-container">
+      <div class="section-header">
+        <h2 id="homeFeaturedTitle">🔥 Featured Gourmet Showcase</h2>
+        <p id="homeFeaturedSubtitle">Explore our top-tier artisanal ingredients. Click any item to order instantly via WhatsApp.</p>
+      </div>
+      <div class="product-grid" id="homeFeaturedGrid">
+        <!-- Rendered dynamically -->
+      </div>
+      <div style="text-align: center; margin-top: 36px;">
+        <button class="btn-primary" data-page="shop"><i class="fa-solid fa-arrow-right"></i> View Complete Showcase</button>
+      </div>
+    </div>
+
+    <!-- Customer Reviews Showcase -->
+    <div style="background: #F4EFE6; padding: 60px 24px; margin-top: 60px;">
+      <div class="section-container" style="margin: 0 auto;">
+        <div class="section-header">
+          <h2>💬 What Our Home Chefs Say</h2>
+          <p>Over 120,000+ passionate cooks trust Pantry Secrets in their kitchens.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+          <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <div style="color: var(--color-star); margin-bottom: 10px;"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p style="font-style: italic; margin-bottom: 16px; color: var(--color-text-main);">"Ordering through WhatsApp was so easy and convenient! I received my Black Truffle Oil the very next day."</p>
+            <h4 style="font-size: 0.95rem; color: var(--color-primary);">— Chef Elena Vance</h4>
+            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Verified Buyer</span>
+          </div>
+
+          <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <div style="color: var(--color-star); margin-bottom: 10px;"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p style="font-style: italic; margin-bottom: 16px; color: var(--color-text-main);">"The Smoked Paprika from La Vera has a deep oak-smoked scent. Fantastic quality and fast customer service."</p>
+            <h4 style="font-size: 0.95rem; color: var(--color-primary);">— Marcus Thorne</h4>
+            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Verified Buyer</span>
+          </div>
+
+          <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <div style="color: var(--color-star); margin-bottom: 10px;"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p style="font-style: italic; margin-bottom: 16px; color: var(--color-text-main);">"Super responsive on WhatsApp when I asked for recipe pairings. Will definitely be reordering!"</p>
+            <h4 style="font-size: 0.95rem; color: var(--color-primary);">— Sophia Lin</h4>
+            <span style="font-size: 0.8rem; color: var(--color-text-muted);">Verified Buyer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SHOP CATALOG SHOWCASE VIEW ==================== -->
+  <section class="page-view" id="page-shop">
+    <div class="page-banner">
+      <h1 id="shopBannerTitle">Gourmet Product Showcase</h1>
+      <p id="shopBannerSubtitle">Browse our hand-harvested organic spices, cold-pressed oils, and honeys. Click any item to order directly via WhatsApp.</p>
+    </div>
+
+    <main class="shop-layout">
+      <!-- Products Content Column -->
+      <section class="shop-content">
+        <!-- Controls Header -->
+        <div class="shop-content-header">
+          <div class="results-count">
+            Showing <strong id="productCount">0</strong> gourmet pantry items
+          </div>
+
+          <div class="sort-controls">
+            <label for="sortSelect" style="font-size: 0.88rem; color: var(--color-text-muted);">Sort By:</label>
+            <select id="sortSelect" class="sort-select">
+              <option value="featured">Featured Items</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Customer Rating</option>
+              <option value="name">Alphabetical (A-Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dynamic Product Cards Grid -->
+        <div class="product-grid" id="productGrid">
+          <!-- Rendered via JavaScript -->
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <!-- ==================== ABOUT US PAGE VIEW ==================== -->
+  <section class="page-view" id="page-about">
+    <div class="page-banner">
+      <h1 id="aboutBannerTitle">Our Story & Passion</h1>
+      <p id="aboutBannerSubtitle">Dedicated to reviving authentic flavor through small-batch organic harvesting and ethical grower partnerships.</p>
+    </div>
+
+    <div class="section-container">
+      <div class="about-grid">
+        <div>
+          <span style="color: var(--color-accent); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Crafting Pure Culinary Joy</span>
+          <h2 id="aboutMainHeadline" style="font-size: 2.4rem; margin: 10px 0 20px;">Sourced From Earth, Hand-Packed With Care</h2>
+          <p id="aboutText1" style="color: var(--color-text-muted); margin-bottom: 16px; font-size: 1.05rem;">
+            Pantry Secrets was born from a simple belief: everyday cooking should be extraordinary. We travel the globe to partner with third-generation family estates, organic spice farmers, and master oil pressers.
+          </p>
+          <p id="aboutText2" style="color: var(--color-text-muted); margin-bottom: 24px; font-size: 1.05rem;">
+            Unlike mass-market grocery items that sit on warehouse shelves for years losing volatile essential oils, all of our products are freshly harvested, small-batch processed, and glass-bottled to seal in vibrant aroma and natural nutrients.
+          </p>
+          <button class="btn-primary" data-page="shop"><i class="fa-solid fa-store"></i> Explore Our Product Showcase</button>
+        </div>
+        <div>
+          <img src="images/hero_banner.png" alt="Pantry Secrets Story" class="about-img">
+        </div>
+      </div>
+
+      <!-- Impact Stats Grid -->
+      <div class="stats-grid">
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Certified Organic Ingredients</div>
+        </div>
+        <div>
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Master Family Farms</div>
+        </div>
+        <div>
+          <div class="stat-num">120K+</div>
+          <div class="stat-label">Happy Home Chefs</div>
+        </div>
+        <div>
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Average Product Rating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== REDESIGNED CONTACT US PAGE VIEW ==================== -->
+  <section class="page-view" id="page-contact">
+    <div class="page-banner">
+      <h1 id="contactBannerTitle">Contact Us & WhatsApp Order Support</h1>
+      <p id="contactBannerSubtitle">Have questions about a product or custom orders? Chat with us directly on WhatsApp!</p>
+    </div>
+
+    <div class="section-container">
+      <div class="contact-grid">
+        <!-- Contact Information Card -->
+        <div class="contact-info-card">
+          <h3 id="contactTitle" style="font-size: 1.8rem; margin-bottom: 12px;">Get In Touch</h3>
+          <p id="contactSubtitle" style="color: var(--color-text-muted); margin-bottom: 32px; font-size: 1rem;">Our customer support team is available Monday through Saturday. For instant responses, click the WhatsApp button below!</p>
+
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="contact-info-item">
+              <div class="contact-info-icon wa">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 2px;">WhatsApp Direct Order</h4>
+                <p id="contactWaDisplay" style="font-size: 0.95rem; color: var(--color-text-muted); font-weight: 600;">+91 98765 43210</p>
+                <span style="font-size: 0.8rem; color: var(--color-whatsapp); font-weight: 600;">⚡ Fastest Response Channel</span>
+              </div>
+            </div>
+
+            <div class="contact-info-item">
+              <div class="contact-info-icon email">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 2px;">Email Us</h4>
+                <p id="contactEmailDisplay" style="font-size: 0.95rem; color: var(--color-text-muted); font-weight: 600;">orders@pantrysecrets.com</p>
+              </div>
+            </div>
+
+            <div class="contact-info-item">
+              <div class="contact-info-icon location">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <h4 style="font-size: 1.05rem; margin-bottom: 2px;">Headquarters & Tasting Room</h4>
+                <p id="contactAddressDisplay" style="font-size: 0.95rem; color: var(--color-text-muted); line-height: 1.4;">742 Gourmet Lane, San Francisco, CA 94107</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+              <a href="https://wa.me/919876543210?text=Hello%20Pantry%20Secrets!%20I%20want%20to%20place%20an%20order." target="_blank" class="btn-whatsapp" style="width: 100%; justify-content: center; padding: 14px;">
+                <i class="fa-brands fa-whatsapp"></i> Start WhatsApp Chat
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form Card -->
+        <div class="contact-card">
+          <h3 style="font-size: 1.5rem; margin-bottom: 8px;">Send Us A Message</h3>
+          <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 24px;">Fill out the form below to place custom inquiries or bulk orders.</p>
+
+          <form id="contactForm" class="contact-form-grid">
+            <div class="contact-form-row">
+              <div class="contact-form-group">
+                <label for="contactName">Your Full Name</label>
+                <input type="text" id="contactName" class="contact-input" placeholder="e.g. John Doe" required>
+              </div>
+              <div class="contact-form-group">
+                <label for="contactEmail">Email or WhatsApp Phone</label>
+                <input type="text" id="contactEmail" class="contact-input" placeholder="+91 98765 43210 or john@example.com" required>
+              </div>
+            </div>
+
+            <div class="contact-form-group">
+              <label for="contactSubject">Inquiry Subject</label>
+              <select id="contactSubject" class="contact-input">
+                <option>Custom WhatsApp Order</option>
+                <option>Product Inquiries & Pairing Advice</option>
+                <option>Wholesale & Bulk Orders</option>
+                <option>Feedback / General Suggestions</option>
+              </select>
+            </div>
+
+            <div class="contact-form-group">
+              <label for="contactMessage">Your Message</label>
+              <textarea id="contactMessage" class="contact-input" rows="4" placeholder="Mention the products you wish to order or ask any questions..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-top: 6px;">
+              <i class="fa-solid fa-paper-plane"></i> Send Inquiry Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Quick View Modal -->
+  <div class="modal-overlay" id="quickViewModal">
+    <div class="modal-card">
+      <button class="close-modal-btn" id="closeQuickViewBtn"><i class="fa-solid fa-xmark"></i></button>
+      <div class="quickview-grid" id="quickViewContent">
+        <!-- Dynamic Quick view content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating WhatsApp Action Button -->
+  <a href="https://wa.me/919876543210?text=Hello%20Pantry%20Secrets!%20I%20am%20browsing%20your%20website%20and%20would%20like%20to%20order." target="_blank" class="floating-whatsapp-btn" id="floatingWhatsAppBtn" title="Chat & Order via WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+    <span>Order on WhatsApp</span>
+  </a>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <h2><i class="fa-solid fa-jar-wheat" style="color: var(--color-accent);"></i> Pantry Secrets</h2>
+        <p>Crafting unforgettable culinary memories through small-batch organic spices, pure cold-pressed artisan oils, and specialty pantry essentials.</p>
+        <div style="display: flex; gap: 14px; font-size: 1.2rem;">
+          <a aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a aria-label="Pinterest"><i class="fa-brands fa-pinterest"></i></a>
+          <a aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigation Links</h4>
+        <ul class="footer-links">
+          <li><a data-page="home">Home</a></li>
+          <li><a data-page="shop">Product Showcase</a></li>
+          <li><a data-page="about">Our Story & Mission</a></li>
+          <li><a data-page="contact">Contact Support</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>WhatsApp Ordering</h4>
+        <ul class="footer-links">
+          <li><a href="https://wa.me/919876543210" target="_blank"><i class="fa-brands fa-whatsapp" style="color: var(--color-whatsapp);"></i> Order via WhatsApp</a></li>
+          <li><a data-page="shop">Gourmet Spices</a></li>
+          <li><a data-page="shop">Cold-Pressed Oils</a></li>
+          <li><a data-page="shop">Raw Honey</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Pantry Secrets. All Rights Reserved. Pure Organic Culinary Showcase.</p>
+      <div style="display: flex; gap: 12px; font-size: 0.9rem; color: var(--color-whatsapp); font-weight: 700; align-items: center;">
+        <i class="fa-brands fa-whatsapp"></i> Direct WhatsApp Business Support
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase CDN Script & Custom Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

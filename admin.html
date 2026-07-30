@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pantry Secrets | Admin Control Backend</title>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Admin Specific Dashboard Layout */
+    .admin-body {
+      background-color: #F4F6F5;
+      min-height: 100vh;
+    }
+
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Admin Sidebar */
+    .admin-sidebar {
+      background: var(--color-primary);
+      color: #FFFFFF;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 36px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .admin-menu {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .admin-menu-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      color: #C0C8C6;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .admin-menu-link:hover, .admin-menu-link.active {
+      background: var(--color-accent);
+      color: var(--color-dark);
+    }
+
+    .admin-sidebar-footer {
+      margin-top: auto;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* Admin Header Topbar */
+    .admin-main {
+      display: flex;
+      flex-direction: column;
+      background: #F4F6F5;
+    }
+
+    .admin-topbar {
+      background: #FFFFFF;
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .admin-content {
+      padding: 36px;
+      flex: 1;
+    }
+
+    /* Stat Cards */
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .stat-card {
+      background: #FFFFFF;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stat-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-icon.wa {
+      background: rgba(37, 211, 102, 0.15);
+      color: var(--color-whatsapp);
+    }
+
+    .stat-icon.supabase {
+      background: rgba(62, 207, 142, 0.15);
+      color: #3ECF8E;
+    }
+
+    /* Admin Table Styling */
+    .table-container {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .table-header-bar {
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .admin-table th, .admin-table td {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .admin-table th {
+      background: #FAF8F4;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .prod-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: #F4F0E8;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-edit {
+      background: var(--color-accent-light);
+      color: var(--color-accent);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .btn-delete {
+      background: #FFEBEE;
+      color: #D32F2F;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    /* Passcode Lock Modal Screen */
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--color-primary);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lock-card {
+      background: #FFFFFF;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    /* Theme Color Preset Chips */
+    .color-preset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: #FFFFFF;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .color-preset-chip:hover {
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    .color-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* SQL Code Box Styling */
+    .sql-code-box {
+      background: #1E293B;
+      color: #E2E8F0;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      font-family: monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      position: relative;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <!-- ==================== PASSCODE AUTH MODAL ==================== -->
+  <div class="lock-overlay" id="lockModal">
+    <div class="lock-card">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--color-accent-light); color: var(--color-accent); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 20px;">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Admin Panel Access</h2>
+      <p style="color: var(--color-text-muted); font-size: 0.9rem; margin-bottom: 24px;">Enter administrative passcode to unlock backend management.</p>
+      
+      <form id="lockForm">
+        <div style="margin-bottom: 20px;">
+          <input type="password" id="passcodeInput" class="admin-input" placeholder="Enter Passcode..." style="text-align: center; font-size: 1.1rem; letter-spacing: 2px;" required autofocus>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;"><i class="fa-solid fa-key"></i> Unlock Dashboard</button>
+      </form>
+      <p id="lockError" style="color: var(--color-sale); font-size: 0.85rem; margin-top: 12px; display: none;">Incorrect passcode! Please try again.</p>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN ADMIN DASHBOARD LAYOUT ==================== -->
+  <div class="admin-layout" id="adminDashboard" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <i class="fa-solid fa-user-shield" style="color: var(--color-accent);"></i>
+        <span>Pantry Admin</span>
+      </div>
+
+      <ul class="admin-menu">
+        <li>
+          <a class="admin-menu-link active" data-tab="overview">
+            <i class="fa-solid fa-chart-pie"></i> Overview
+          </a>
+        </li>
+        <li>
+          <a class="admin-menu-link" data-tab="products">
+            <i class="fa-solid fa-box-open"></i> Products Catalog
+          </a>
+        </li>
+        <li>
+          <a class="admin-menu-link" data-tab="supabase">
+            <i class="fa-solid fa-bolt" style="color: #3ECF8E;"></i> Supabase Database
+          </a>
+        </li>
+        <li>
+          <a class="admin-menu-link" data-tab="branding">
+            <i class="fa-solid fa-palette"></i> Logo & Colors
+          </a>
+        </li>
+        <li>
+          <a class="admin-menu-link" data-tab="content">
+            <i class="fa-solid fa-pen-to-square"></i> All Pages Content
+          </a>
+        </li>
+        <li>
+          <a class="admin-menu-link" data-tab="whatsapp">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Settings
+          </a>
+        </li>
+      </ul>
+
+      <div class="admin-sidebar-footer">
+        <a href="index.html" target="_blank" class="admin-menu-link" style="background: rgba(255,255,255,0.1);">
+          <i class="fa-solid fa-globe"></i> View Live Store
+        </a>
+        <a id="logoutBtn" class="admin-menu-link" style="color: #FF8A80; margin-top: 8px;">
+          <i class="fa-solid fa-right-from-bracket"></i> Lock Panel
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Topbar Header -->
+      <header class="admin-topbar">
+        <div>
+          <h2 id="tabTitle" style="font-size: 1.4rem;">Dashboard Overview</h2>
+          <p style="font-size: 0.85rem; color: var(--color-text-muted);">Manage product catalog, Supabase database, website logo, theme colors & WhatsApp.</p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span id="supabaseStatusBadge" style="font-size: 0.85rem; background: #E8F5E9; color: #2E7D32; font-weight: 700; padding: 6px 14px; border-radius: var(--radius-full);">
+            <i class="fa-solid fa-circle" style="font-size: 0.6rem;"></i> Local Storage Ready
+          </span>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="admin-content">
+        
+        <!-- ==================== TAB 1: OVERVIEW ==================== -->
+        <section class="tab-view active" id="tab-overview">
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-jar-wheat"></i></div>
+              <div>
+                <h3 id="statTotalProducts" style="font-size: 1.8rem; font-weight: 800;">12</h3>
+                <p style="font-size: 0.82rem; color: var(--color-text-muted);">Active Products</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon supabase"><i class="fa-solid fa-bolt"></i></div>
+              <div>
+                <h3 id="statSupabaseStatus" style="font-size: 1.4rem; font-weight: 800; color: #3ECF8E;">Connected</h3>
+                <p style="font-size: 0.82rem; color: var(--color-text-muted);">Supabase Backend</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon wa"><i class="fa-brands fa-whatsapp"></i></div>
+              <div>
+                <h3 style="font-size: 1.8rem; font-weight: 800; color: var(--color-whatsapp);">Enabled</h3>
+                <p style="font-size: 0.82rem; color: var(--color-text-muted);">WhatsApp Direct Order</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+              <div>
+                <h3 style="font-size: 1.8rem; font-weight: 800; color: var(--color-accent);">INR (₹)</h3>
+                <p style="font-size: 0.82rem; color: var(--color-text-muted);">Active Currency</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Recent Products Preview -->
+          <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h3>Quick Store Operations</h3>
+              <button class="btn-primary" id="quickAddBtn"><i class="fa-solid fa-plus"></i> Add New Product</button>
+            </div>
+            <p style="color: var(--color-text-muted); font-size: 0.92rem;">Use the sidebar navigation tabs to connect your Supabase database, edit products, change logo & colors, update banners, and set up WhatsApp ordering.</p>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 2: PRODUCTS CATALOG ==================== -->
+        <section class="tab-view" id="tab-products" style="display: none;">
+          <div class="table-container">
+            <div class="table-header-bar">
+              <div>
+                <h3>Product Catalog Management</h3>
+                <p style="font-size: 0.82rem; color: var(--color-text-muted);">Add, edit prices, descriptions, and images for all products.</p>
+              </div>
+              <button class="btn-primary" id="openAddModalBtn"><i class="fa-solid fa-plus"></i> Add Product</button>
+            </div>
+
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Price (₹)</th>
+                  <th>Badges</th>
+                  <th>Rating</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminProductsTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 3: SUPABASE DATABASE CONNECTION ==================== -->
+        <section class="tab-view" id="tab-supabase" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 28px;">
+            
+            <!-- Supabase Credentials Card -->
+            <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                <div style="width: 42px; height: 42px; border-radius: var(--radius-md); background: rgba(62, 207, 142, 0.15); color: #3ECF8E; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                  <h3 style="font-size: 1.3rem; margin: 0;">Supabase API Credentials</h3>
+                  <span id="supabaseConnBadge" style="font-size: 0.78rem; font-weight: 700; color: #D32F2F;">🔴 Not Connected</span>
+                </div>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 20px;">Enter your Supabase Project URL and Anon API key from your Supabase Project Settings > API.</p>
+
+              <!-- Live Test Diagnostic Result Box -->
+              <div id="testResultBox" style="display: none; padding: 14px 18px; border-radius: var(--radius-sm); font-size: 0.88rem; margin-bottom: 20px; font-weight: 600;"></div>
+
+              <form id="supabaseConfigForm">
+                <div class="form-group" style="margin-bottom: 16px;">
+                  <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">Supabase Project URL *</label>
+                  <input type="url" id="supabaseUrlInput" class="admin-input" placeholder="https://xyzcompany.supabase.co" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 24px;">
+                  <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">Supabase Anon API Key *</label>
+                  <textarea id="supabaseKeyInput" class="admin-input" rows="3" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required></textarea>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; background: #3ECF8E; color: #062B1B;">
+                    <i class="fa-solid fa-plug"></i> Connect & Save Credentials
+                  </button>
+
+                  <button type="button" id="btnTestSupabase" class="btn-primary" style="width: 100%; justify-content: center; background: #0284C7; color: #FFFFFF;">
+                    <i class="fa-solid fa-vial-circle-check"></i> Test Live Supabase Connection
+                  </button>
+
+                  <button type="button" id="btnSyncToSupabase" class="btn-primary" style="width: 100%; justify-content: center; background: var(--color-primary);">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Push All Local Data to Supabase Database
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- SQL Schema Setup Guide Card -->
+            <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="font-size: 1.25rem;"><i class="fa-solid fa-code" style="color: #3ECF8E;"></i> Supabase SQL Setup Code</h3>
+                <button type="button" id="copySqlBtn" class="btn-edit"><i class="fa-solid fa-copy"></i> Copy SQL Code</button>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 16px;">Copy and run this SQL script in your **Supabase SQL Editor** to create the required `products` and `settings` tables automatically:</p>
+
+              <pre class="sql-code-box" id="sqlCodeBlock"><code>-- 1. Create Products Table
+CREATE TABLE products (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price NUMERIC NOT NULL,
+  old_price NUMERIC,
+  rating NUMERIC DEFAULT 4.8,
+  reviews_count INTEGER DEFAULT 50,
+  image TEXT,
+  organic BOOLEAN DEFAULT false,
+  best_seller BOOLEAN DEFAULT false,
+  sale BOOLEAN DEFAULT false,
+  description TEXT,
+  ingredients TEXT,
+  origin TEXT,
+  size TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 2. Create Settings Table
+CREATE TABLE settings (
+  id TEXT PRIMARY KEY DEFAULT 'main_settings',
+  data JSONB NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
+-- 3. Enable RLS Policies for Public Access
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public Read Products" ON products FOR SELECT USING (true);
+CREATE POLICY "Public All Products" ON products FOR ALL USING (true);
+
+CREATE POLICY "Public Read Settings" ON settings FOR SELECT USING (true);
+CREATE POLICY "Public All Settings" ON settings FOR ALL USING (true);</code></pre>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==================== TAB 4: LOGO & WEBSITE COLOR SYSTEM ==================== -->
+        <section class="tab-view" id="tab-branding" style="display: none;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+            
+            <!-- Logo Customization Card -->
+            <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+              <h3 style="font-size: 1.3rem; margin-bottom: 6px;"><i class="fa-solid fa-image-portrait" style="color: var(--color-accent);"></i> Website Brand Logo</h3>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 20px;">Upload a custom image logo or customize your text brand name across header & footer.</p>
+
+              <form id="logoSettingsForm">
+                <div class="form-group" style="margin-bottom: 16px;">
+                  <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">Logo Display Mode</label>
+                  <select id="logoTypeSelect" class="admin-input">
+                    <option value="text">Icon + Text Brand Name (Default)</option>
+                    <option value="image">Custom Image Logo</option>
+                  </select>
+                </div>
+
+                <!-- Text Logo Options -->
+                <div id="textLogoGroup" style="margin-bottom: 16px;">
+                  <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">Brand Name Text</label>
+                  <input type="text" id="logoTextInput" class="admin-input" placeholder="e.g. Pantry Secrets">
+                </div>
+
+                <!-- Image Logo Options -->
+                <div id="imageLogoGroup" style="display: none; margin-bottom: 16px;">
+                  <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">Logo Image Upload (Computer / Drag & Drop)</label>
+                  
+                  <div class="image-dropzone" id="logoDropzone">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>Drag & Drop Logo Image Here</p>
+                    <span>or click to browse from computer</span>
+                    <input type="file" id="logoFileInput" accept="image/*" style="display: none;">
+                  </div>
+
+                  <div class="image-preview-box" id="logoPreviewBox">
+                    <img id="logoPreviewImg" src="" alt="Logo Preview">
+                    <button type="button" class="remove-img-btn" id="removeLogoImgBtn"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+
+                  <label style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); margin-top: 10px; display: block;">Or Paste Logo Image URL:</label>
+                  <input type="url" id="logoUrlInput" class="admin-input" placeholder="https://example.com/logo.png" style="margin-top: 4px;">
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;"><i class="fa-solid fa-floppy-disk"></i> Save Logo Settings</button>
+              </form>
+            </div>
+
+            <!-- Website Color System Card -->
+            <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+              <h3 style="font-size: 1.3rem; margin-bottom: 6px;"><i class="fa-solid fa-palette" style="color: var(--color-accent);"></i> Website Theme Colors</h3>
+              <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 20px;">Customize the live color palette across your entire store.</p>
+
+              <!-- Color Presets Bar -->
+              <div style="margin-bottom: 20px;">
+                <label style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase; display: block; margin-bottom: 10px;">One-Click Color Presets:</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                  <button type="button" class="color-preset-chip" data-primary="#1B2A26" data-accent="#C89547" data-whatsapp="#25D366" data-bg="#FBF9F5">
+                    <span class="color-dot" style="background: #1B2A26;"></span> Emerald & Gold
+                  </button>
+                  <button type="button" class="color-preset-chip" data-primary="#0F172A" data-accent="#F59E0B" data-whatsapp="#25D366" data-bg="#F8FAFC">
+                    <span class="color-dot" style="background: #0F172A;"></span> Midnight & Amber
+                  </button>
+                  <button type="button" class="color-preset-chip" data-primary="#2D1215" data-accent="#D97706" data-whatsapp="#25D366" data-bg="#FFFBEB">
+                    <span class="color-dot" style="background: #2D1215;"></span> Chocolate & Honey
+                  </button>
+                  <button type="button" class="color-preset-chip" data-primary="#18181B" data-accent="#E11D48" data-whatsapp="#25D366" data-bg="#FAFAFA">
+                    <span class="color-dot" style="background: #18181B;"></span> Onyx & Ruby
+                  </button>
+                </div>
+              </div>
+
+              <form id="colorSettingsForm">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">Header/Footer Primary Color</label>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+                      <input type="color" id="colorPrimaryPicker" value="#1B2A26" style="width: 44px; height: 38px; border: none; cursor: pointer; border-radius: 6px;">
+                      <input type="text" id="colorPrimaryInput" class="admin-input" value="#1B2A26" style="font-family: monospace;">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">Accent / Highlight Color</label>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+                      <input type="color" id="colorAccentPicker" value="#C89547" style="width: 44px; height: 38px; border: none; cursor: pointer; border-radius: 6px;">
+                      <input type="text" id="colorAccentInput" class="admin-input" value="#C89547" style="font-family: monospace;">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">WhatsApp CTA Brand Color</label>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+                      <input type="color" id="colorWhatsappPicker" value="#25D366" style="width: 44px; height: 38px; border: none; cursor: pointer; border-radius: 6px;">
+                      <input type="text" id="colorWhatsappInput" class="admin-input" value="#25D366" style="font-family: monospace;">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--color-primary);">Page Background Color</label>
+                    <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+                      <input type="color" id="colorBgPicker" value="#FBF9F5" style="width: 44px; height: 38px; border: none; cursor: pointer; border-radius: 6px;">
+                      <input type="text" id="colorBgInput" class="admin-input" value="#FBF9F5" style="font-family: monospace;">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;"><i class="fa-solid fa-palette"></i> Apply Theme Color Palette</button>
+              </form>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ==================== TAB 5: ALL PAGES CONTENT & BANNER EDITOR ==================== -->
+        <section class="tab-view" id="tab-content" style="display: none;">
+          <div style="background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <h3 style="font-size: 1.3rem; margin-bottom: 6px;"><i class="fa-solid fa-pen-to-square" style="color: var(--color-accent);"></i> All Pages Text Content & Banner Editor</h3>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 24px;">Edit titles, subtitles, stories, contact information, and banner images for all 4 pages on your website.</p>
+
+            <form id="pagesContentForm">
+              
+              <!-- 📢 1. Top Announcement Bar -->
+              <div style="background: #FAF8F4; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--color-border); margin-bottom: 24px;">
+                <h4 style="font-size: 1rem; margin-bottom: 12px; color: var(--color-primary);"><i class="fa-solid fa-bullhorn" style="color: var(--color-accent);"></i> 1. Top Announcement Bar</h4>
+                <div class="form-group">
+                  <label style="font-size: 0.8rem; font-weight: 700;">Announcement Bar Text</label>
+                  <input type="text" id="settingAnnouncement" class="admin-input" placeholder="Promo text displayed at top of all pages...">
+                </div>
+              </div>
+
+              <!-- 🏠 2. Home Page Settings -->
+              <div style="background: #FAF8F4; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--color-border); margin-bottom: 24px;">
+                <h4 style="font-size: 1rem; margin-bottom: 14px; color: var(--color-primary);"><i class="fa-solid fa-house" style="color: var(--color-accent);"></i> 2. Home Page Text & Banner</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Hero Main Title (HTML supported)</label>
+                    <input type="text" id="settingHeroTitle" class="admin-input" placeholder="Handcrafted Gourmet <span class='gold'>Pantry Flavors</span>">
+                  </div>
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Featured Showcase Title</label>
+                    <input type="text" id="settingFeaturedTitle" class="admin-input" placeholder="🔥 Featured Gourmet Showcase">
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                  <label style="font-size: 0.8rem; font-weight: 700;">Hero Paragraph Subtitle</label>
+                  <textarea id="settingHeroSubtitle" class="admin-input" rows="2" placeholder="Hero introduction paragraph text..."></textarea>
+                </div>
+
+                <div class="form-group">
+                  <label style="font-size: 0.8rem; font-weight: 700;">Home Hero Background Banner Image (URL or Computer Upload)</label>
+                  <input type="text" id="settingHeroBannerImg" class="admin-input" placeholder="https://example.com/banner.png or base64 image data">
+                </div>
+              </div>
+
+              <!-- 🛒 3. Product Showcase Page Settings -->
+              <div style="background: #FAF8F4; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--color-border); margin-bottom: 24px;">
+                <h4 style="font-size: 1rem; margin-bottom: 14px; color: var(--color-primary);"><i class="fa-solid fa-store" style="color: var(--color-accent);"></i> 3. Showcase Page Text & Banner</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Showcase Banner Title</label>
+                    <input type="text" id="settingShopBannerTitle" class="admin-input" placeholder="Gourmet Product Showcase">
+                  </div>
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Showcase Banner Subtitle</label>
+                    <input type="text" id="settingShopBannerSubtitle" class="admin-input" placeholder="Browse our hand-harvested organic spices...">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label style="font-size: 0.8rem; font-weight: 700;">Showcase Banner Background Image</label>
+                  <input type="text" id="settingShopBannerImg" class="admin-input" placeholder="Banner image URL or Base64 data...">
+                </div>
+              </div>
+
+              <!-- 🍃 4. About Us Page Settings -->
+              <div style="background: #FAF8F4; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--color-border); margin-bottom: 24px;">
+                <h4 style="font-size: 1rem; margin-bottom: 14px; color: var(--color-primary);"><i class="fa-solid fa-leaf" style="color: var(--color-accent);"></i> 4. About Us Page Text & Banner</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">About Banner Title</label>
+                    <input type="text" id="settingAboutBannerTitle" class="admin-input" placeholder="Our Story & Passion">
+                  </div>
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">About Banner Subtitle</label>
+                    <input type="text" id="settingAboutBannerSubtitle" class="admin-input" placeholder="Dedicated to reviving authentic flavor...">
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                  <label style="font-size: 0.8rem; font-weight: 700;">Main Brand Story Headline</label>
+                  <input type="text" id="settingAboutTitle" class="admin-input" placeholder="Sourced From Earth, Hand-Packed With Care">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Story Paragraph 1</label>
+                    <textarea id="settingAboutText1" class="admin-input" rows="3" placeholder="First paragraph of brand story..."></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Story Paragraph 2</label>
+                    <textarea id="settingAboutText2" class="admin-input" rows="3" placeholder="Second paragraph of brand story..."></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label style="font-size: 0.8rem; font-weight: 700;">About Page Banner Background Image</label>
+                  <input type="text" id="settingAboutBannerImg" class="admin-input" placeholder="Banner image URL or Base64 data...">
+                </div>
+              </div>
+
+              <!-- ✉️ 5. Contact Support Page Settings -->
+              <div style="background: #FAF8F4; padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--color-border); margin-bottom: 24px;">
+                <h4 style="font-size: 1rem; margin-bottom: 14px; color: var(--color-primary);"><i class="fa-solid fa-envelope" style="color: var(--color-accent);"></i> 5. Contact Support Page Text & Details</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Contact Banner Title</label>
+                    <input type="text" id="settingContactBannerTitle" class="admin-input" placeholder="Contact Us & WhatsApp Order Support">
+                  </div>
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Contact Banner Subtitle</label>
+                    <input type="text" id="settingContactBannerSubtitle" class="admin-input" placeholder="Have questions about a product...">
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Support Email Address</label>
+                    <input type="email" id="settingContactEmail" class="admin-input" placeholder="orders@pantrysecrets.com">
+                  </div>
+                  <div class="form-group">
+                    <label style="font-size: 0.8rem; font-weight: 700;">Physical Headquarters Address</label>
+                    <input type="text" id="settingContactAddress" class="admin-input" placeholder="742 Gourmet Lane, San Francisco...">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label style="font-size: 0.8rem; font-weight: 700;">Contact Page Banner Background Image</label>
+                  <input type="text" id="settingContactBannerImg" class="admin-input" placeholder="Banner image URL or Base64 data...">
+                </div>
+              </div>
+
+              <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem;"><i class="fa-solid fa-floppy-disk"></i> Save All Pages Content & Banners</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- ==================== TAB 6: WHATSAPP SETTINGS ==================== -->
+        <section class="tab-view" id="tab-whatsapp" style="display: none;">
+          <div style="max-width: 600px; background: #FFFFFF; padding: 28px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
+            <h3 style="font-size: 1.3rem; margin-bottom: 6px;"><i class="fa-brands fa-whatsapp" style="color: var(--color-whatsapp);"></i> WhatsApp Direct Integration Settings</h3>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 24px;">Configure the target WhatsApp phone number for instant customer orders & inquiries.</p>
+
+            <form id="whatsappSettingsForm">
+              <div class="form-group" style="margin-bottom: 20px;">
+                <label style="font-size: 0.82rem; font-weight: 700; color: var(--color-primary); text-transform: uppercase;">WhatsApp Business Number (with Country Code)</label>
+                <input type="text" id="whatsappPhoneInput" class="admin-input" placeholder="919876543210" required>
+                <span style="font-size: 0.78rem; color: var(--color-text-muted); margin-top: 4px; display: block;">Include country code without '+' or spaces (e.g. 919876543210 for India).</span>
+              </div>
+
+              <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;"><i class="fa-solid fa-floppy-disk"></i> Save WhatsApp Number</button>
+            </form>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== ADD / EDIT PRODUCT MODAL ==================== -->
+  <div class="modal-overlay" id="productModal">
+    <div class="modal-card admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="modalTitle"><i class="fa-solid fa-box-open" style="color: var(--color-accent);"></i> Add New Product</h3>
+        <button class="close-modal-btn" id="closeProductModalBtn" style="position: static; color: #FFFFFF; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="productForm" class="admin-modal-form">
+        <input type="hidden" id="prodId">
+
+        <!-- Redesigned Clean 2-Column Grid -->
+        <div class="admin-form-grid">
+          
+          <div class="form-group full-width">
+            <label for="prodName">Product Name *</label>
+            <input type="text" id="prodName" class="admin-input" placeholder="e.g. Black Truffle Olive Oil" required>
+          </div>
+
+          <div class="form-group">
+            <label for="prodCategory">Category *</label>
+            <select id="prodCategory" class="admin-input" required>
+              <option value="spices">Spices & Rubs</option>
+              <option value="oils">Artisanal Oils & Vinegars</option>
+              <option value="honey">Raw Honey & Preserves</option>
+              <option value="sauces">Specialty Sauces</option>
+              <option value="salts">Gourmet Salts</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="prodPrice">Selling Price (₹ INR) *</label>
+            <input type="number" id="prodPrice" class="admin-input" placeholder="1499" min="0" step="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="prodOldPrice">Original / MRP Price (₹ Optional)</label>
+            <input type="number" id="prodOldPrice" class="admin-input" placeholder="1799" min="0" step="1">
+          </div>
+
+          <div class="form-group">
+            <label for="prodRating">Rating (1.0 to 5.0)</label>
+            <input type="number" id="prodRating" class="admin-input" placeholder="4.9" min="1" max="5" step="0.1" value="4.8">
+          </div>
+
+          <!-- Product Image Drag and Drop Uploader -->
+          <div class="form-group full-width">
+            <label>Product Image (Computer File Upload / Drag & Drop)</label>
+            
+            <div class="image-dropzone" id="imageDropzone">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p>Drag & Drop Product Image Here</p>
+              <span>or click to browse from your computer</span>
+              <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="image-preview-box" id="previewBox">
+              <img id="previewImg" src="" alt="Preview">
+              <button type="button" class="remove-img-btn" id="removeImgBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--color-text-muted); margin-top: 10px; display: block;">Or Paste Image URL:</label>
+            <input type="url" id="prodImage" class="admin-input" placeholder="https://images.unsplash.com/photo-..." style="margin-top: 4px;">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="prodDescription">Product Description</label>
+            <textarea id="prodDescription" class="admin-input" rows="3" placeholder="Detailed product story, flavor notes, culinary pairings..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="prodIngredients">Ingredients List</label>
+            <input type="text" id="prodIngredients" class="admin-input" placeholder="Cold-pressed olive oil, truffle extract...">
+          </div>
+
+          <div class="form-group">
+            <label for="prodOrigin">Origin / Region</label>
+            <input type="text" id="prodOrigin" class="admin-input" placeholder="Umbria, Italy">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="prodSize">Net Weight / Package Size</label>
+            <input type="text" id="prodSize" class="admin-input" placeholder="250ml glass bottle or 120g jar">
+          </div>
+
+          <div class="form-group full-width">
+            <label>Special Product Badges</label>
+            <div class="admin-badges-picker">
+              <label class="badge-checkbox-label">
+                <input type="checkbox" id="prodOrganic" checked> 🌿 100% Organic
+              </label>
+              <label class="badge-checkbox-label">
+                <input type="checkbox" id="prodBestSeller"> 🔥 Best Seller
+              </label>
+              <label class="badge-checkbox-label">
+                <input type="checkbox" id="prodSale"> 🏷️ On Sale
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="admin-modal-actions">
+          <button type="button" class="btn-cancel" id="cancelProductBtn">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex: 1; justify-content: center;"><i class="fa-solid fa-check"></i> Save Product to Catalog</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Supabase CDN Script & Custom Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  
+  <!-- Admin Application Logic -->
+  <script src="admin.js"></script>
+</body>
+</html>
